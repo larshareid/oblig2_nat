@@ -1,7 +1,7 @@
 # oblig2_nat
 
 Etter du laster ned alle filene, er det et par endringere som må gjøres for alt skal kjøres som forventet.
-index.html må manuelt flyttes til /var/www, og på linje 125 i start server må du selv velge hvilket
+index.html må manuelt flyttes til /var/www, og på linje 125 i startserver.sh må du selv velge hvilket
 repository, der du har filene for serveren som skal kjøres (c-scriptet osv...)
 
 Serveren støtter filtypene:

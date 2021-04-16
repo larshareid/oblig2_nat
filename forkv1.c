@@ -19,6 +19,26 @@
 #define LOKAL_PORT 80
 #define BAK_LOGG 10 // StÃƒÂ¸rrelse pÃƒÂ¥ for kÃƒÂ¸ ventende forespÃƒÂ¸rsler 
 
+//function declaration
+int getContentLength(FILE* input_file);
+
+//function
+int getContentLength(FILE* input_file)
+{
+    int count = 0;
+    int ch;
+
+    while (1)
+    {
+        ch = fgetc(input_file);
+        if (ch == EOF)
+            break;
+        count++;
+    }
+
+    return (count);
+}
+
 char* timeStamp()
 {
         time_t currentTime;
@@ -33,8 +53,8 @@ char* timeStamp()
 
 char* timeStamp();
 
-char* TypeEnd[]={ "html", "plain", "png", "svg", "xml", "xslt+xml", "css", "json", NULL};
-char* TypeHead[]={ "text/html", "text/plain", "image/png", "image/svg", "application/xml", "application/xslt+xml", "text/css", "application/json", NULL};
+char* TypeEnd[]={"php", "html", "plain", "png", "svg", "xml", "xslt+xml", "css", "json", NULL};
+char* TypeHead[]={ "text/php", "text/html", "text/plain", "image/png", "image/svg", "application/xml", "application/xslt+xml", "text/css", "application/json", NULL};
 
 
 void printHeader(char ending[] , int filValid, int fileExist){
@@ -50,7 +70,7 @@ while(TypeEnd[i]){
   if(filValid == 1 && fileExist == 1){
     printf("HTTP/1.1 200 OK\nContent-Type: %s\nContent-Length: 270000\n\n", pHolder);
 }else if(fileExist == 0 && filValid == 1){
-  printf("HTTP/1.1 404 Not Found\nContent-Type: %s\nContent-Length: 270000\n\n", pHolder);
+  printf("HTTP/1.1 404 Not Found\nContent-Type: text/plain\nContent-Length: 18\n\n");
   printf("404 File not found");
   }else if(filValid == 0){
   printf("HTTP/1.1 415 Unsupported Media Type\nContent-Type: %s\nContent-Length: 270000\n\n", pHolder);
@@ -208,14 +228,23 @@ if(filValid == 1 || strcmp(singleLine, "/") == 0){
 if(fdimg == -1 ){
   fileExist = 0;}
   
+char* pptr = &singleLine;
+FILE * fileptr;
+fileptr=fopen(pptr, "r");
+int count = getContentLength(fileptr);
+fclose(pptr);
+
+  
 printHeader(fileEnding, filValid, fileExist);
+
+printf("fdimg is : %d", count);
 
 
 //Sjekker om fil eksisterer, og dermed ÃƒÂ¥pner og sender. Gir riktig feilmeldinger
 //om filtype ikke stÃƒÂ¸ttes eller ikke finnes.
 //printf("HTTP/1.1 200 OK\nContent-Type: text/html\n\n");
 
-  sendfile(ny_sd, fdimg, NULL, 1000);
+  sendfile(ny_sd, fdimg, NULL, 270000);
   close(fdimg);
   printf("\n");
 
